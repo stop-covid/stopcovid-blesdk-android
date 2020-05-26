@@ -24,7 +24,7 @@ import kotlinx.coroutines.runBlocking
 
 class BleProximityNotification(
     private val bleScanner: BleScanner,
-    private val bleAdvertiser: BleAdvertiser,
+    private val bleAdvertiser: BleAdvertiser?,
     private val bleGattManager: BleGattManager,
     private val settings: BleSettings,
     private val coroutineScope: CoroutineScope,
@@ -80,7 +80,7 @@ class BleProximityNotification(
     }
 
     private fun startAdvertiser() {
-        bleAdvertiser.start(
+        bleAdvertiser?.start(
             data = buildPayload(),
             callback = object : BleAdvertiser.Callback {
                 override fun onError(errorCode: Int) {
@@ -152,7 +152,7 @@ class BleProximityNotification(
     }
 
     private fun stopAdvertiser() {
-        bleAdvertiser.stop()
+        bleAdvertiser?.stop()
     }
 
     private fun stopGattServer() {
