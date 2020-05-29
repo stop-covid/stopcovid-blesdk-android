@@ -150,10 +150,7 @@ internal class BleGattManagerImpl(
                 value
             )
 
-            Log.d(
-                TAG,
-                "onCharacteristicWriteRequest device=$device, characteristic=${characteristic.uuid}"
-            )
+            Log.d(TAG, "onCharacteristicWriteRequest")
 
             val result = when (characteristic.uuid) {
                 payloadCharacteristic.uuid -> {
@@ -168,10 +165,7 @@ internal class BleGattManagerImpl(
 
             }
 
-            Log.d(
-                TAG,
-                "onCharacteristicWriteRequest result=$result device=$device requestId=$requestId characteristic=${characteristic.uuid} preparedWrite=$preparedWrite responseNeeded=$responseNeeded offset=$offset value=$value"
-            )
+            Log.d(TAG, "onCharacteristicWriteRequest result=$result")
             if (responseNeeded) {
                 bluetoothGattServer?.sendResponse(device, requestId, result, offset, null)
             }

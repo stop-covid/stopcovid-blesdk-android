@@ -86,8 +86,6 @@ class BleScannerImpl(
         override fun onBatchScanResults(results: List<ScanResult>) {
             super.onBatchScanResults(results)
 
-            Log.d(TAG, "onBatchScanResults results = $results")
-
             results
                 .distinctBy { it.device }
                 .toBleScannedDevices(settings.serviceUuid)
@@ -101,7 +99,6 @@ class BleScannerImpl(
         ) {
             super.onScanResult(callbackType, result)
 
-            Log.d(TAG, "onScanResult results = $result")
             callback.onResult(listOf(result.toBleScannedDevice(settings.serviceUuid)))
         }
 

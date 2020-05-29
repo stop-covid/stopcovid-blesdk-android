@@ -11,7 +11,6 @@
 package com.orange.proximitynotification.ble
 
 import android.bluetooth.BluetoothDevice
-import android.util.Log
 import com.orange.proximitynotification.*
 import com.orange.proximitynotification.ble.advertiser.BleAdvertiser
 import com.orange.proximitynotification.ble.gatt.BleGattManager
@@ -168,7 +167,6 @@ class BleProximityNotification(
     }
 
     private fun notifyProximity(proximityInfo: ProximityInfo) {
-        Log.d(TAG, "Proximity notification (proximityInfo=$proximityInfo")
         callback.onProximity(proximityInfo)
     }
 
