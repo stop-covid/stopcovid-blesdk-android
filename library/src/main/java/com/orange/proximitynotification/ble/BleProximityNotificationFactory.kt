@@ -31,17 +31,14 @@ object BleProximityNotificationFactory {
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter = bluetoothManager.adapter
 
+        if (bluetoothAdapter.bluetoothLeAdvertiser == null) {
+            return null
+        }
+
         val bleGattClientProvider = BleGattClientProviderImpl(context)
-        val bleAdvertiser =
-            bluetoothAdapter.bluetoothLeAdvertiser?.let { BleAdvertiserImpl(settings, it) }
+        val bleAdvertiser = BleAdvertiserImpl(settings, bluetoothAdapter.bluetoothLeAdvertiser)
         val bleScanner = BleScannerImpl(settings, BluetoothLeScannerCompat.getScanner())
-        val bleGattManager = BleGattManagerImpl(
-            settings,
-            context,
-            bluetoothManager,
-            bleGattClientProvider,
-            coroutineScope
-        )
+        val bleGattManager = BleGattManagerImpl(settings, context, bluetoothManager, bleGattClientProvider, coroutineScope)
 
         return BleProximityNotification(
             bleScanner,
