@@ -16,7 +16,6 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
-import android.util.Log
 import com.orange.proximitynotification.ble.BleProximityNotification
 import com.orange.proximitynotification.ble.BleProximityNotificationFactory
 import com.orange.proximitynotification.ble.BleSettings
@@ -83,6 +82,17 @@ abstract class ProximityNotificationService : Service(),
      */
     fun notifyProximityPayloadUpdated() {
         bleProximityNotification?.notifyPayloadUpdated()
+    }
+
+    /**
+     * Notify that [BleSettings] have changed
+     * It will restart [BleProximityNotification]
+     */
+    fun notifyBleSettingsUpdate() {
+        if (isRunning()) {
+            stopBleProximityNotification()
+            startBleProximityNotification()
+        }
     }
 
     /**
