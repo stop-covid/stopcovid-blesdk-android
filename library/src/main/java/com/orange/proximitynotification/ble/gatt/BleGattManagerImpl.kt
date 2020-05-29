@@ -22,6 +22,7 @@ import kotlinx.coroutines.channels.receiveOrNull
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
+import timber.log.Timber
 
 internal class BleGattManagerImpl(
     override val settings: BleSettings,
@@ -31,10 +32,6 @@ internal class BleGattManagerImpl(
     private val coroutineScope: CoroutineScope,
     private val coroutineContextProvider: CoroutineContextProvider = CoroutineContextProvider.Default()
 ) : BleGattManager {
-
-    companion object {
-        private val TAG = BleGattManagerImpl::class.java.simpleName
-    }
 
     private lateinit var executionChannel: Channel<suspend () -> Unit>
     private var executionJob: Job? = null
@@ -49,7 +46,7 @@ internal class BleGattManagerImpl(
     )
 
     override fun start(callback: BleGattManager.Callback) {
-        Log.d(TAG, "Starting GATT server")
+        Timber.d("Starting GATT server")
 
         stop()
 
@@ -63,7 +60,7 @@ internal class BleGattManagerImpl(
     }
 
     override fun stop() {
-        Log.d(TAG, "Stopping GATT server")
+        Timber.d("Stopping GATT server")
 
         executionJob?.cancel()
         executionJob = null
@@ -90,10 +87,10 @@ internal class BleGattManagerImpl(
                 val rssi = client.readRemoteRssi()
                 rssiChannel.send(rssi)
             } catch (e: TimeoutCancellationException) {
-                Log.d(TAG, "Request remote rssi failed. Connection timeout", e)
+                Timber.d(e,"Request remote rssi failed. Connection timeout")
                 rssiChannel.close()
             } catch (t: Throwable) {
-                Log.d(TAG, "Request remote rssi failed with exception", t)
+                Timber.d(t,"Request remote rssi failed with exception")
                 rssiChannel.close()
             } finally {
                 client.close()
@@ -150,7 +147,7 @@ internal class BleGattManagerImpl(
                 value
             )
 
-            Log.d(TAG, "onCharacteristicWriteRequest")
+            Timber.d("onCharacteristicWriteRequest")
 
             val result = when (characteristic.uuid) {
                 payloadCharacteristic.uuid -> {
@@ -165,7 +162,7 @@ internal class BleGattManagerImpl(
 
             }
 
-            Log.d(TAG, "onCharacteristicWriteRequest result=$result")
+            Timber.d("onCharacteristicWriteRequest result=$result")
             if (responseNeeded) {
                 bluetoothGattServer?.sendResponse(device, requestId, result, offset, null)
             }

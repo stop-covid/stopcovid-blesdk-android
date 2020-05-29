@@ -14,6 +14,7 @@ import android.os.ParcelUuid
 import android.util.Log
 import com.orange.proximitynotification.ble.BleSettings
 import no.nordicsemi.android.support.v18.scanner.*
+import timber.log.Timber
 
 class BleScannerImpl(
     override val settings: BleSettings,
@@ -21,22 +22,20 @@ class BleScannerImpl(
 ) : BleScanner {
 
     companion object {
-        private val TAG: String = BleScannerImpl::class.java.simpleName
-
         private const val APPLE_MANUFACTURER_ID = 76
     }
 
     private var scanCallback: ScanCallback? = null
 
     override fun start(callback: BleScanner.Callback) {
-        Log.d(TAG, "Starting scanner")
+        Timber.d("Starting scanner")
 
         doStop()
         doStart(callback)
     }
 
     override fun stop() {
-        Log.d(TAG, "Stopping scanner")
+        Timber.d("Stopping scanner")
 
         doStop()
     }
@@ -105,7 +104,7 @@ class BleScannerImpl(
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
 
-            Log.w(TAG, "onScanFailed errorCode = $errorCode")
+            Timber.w("onScanFailed errorCode = $errorCode")
             callback.onError(errorCode)
         }
     }
